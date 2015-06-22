@@ -5,15 +5,19 @@ require "csv"
 class User
   attr_accessor :name, :pin
   
-  # def initialize(name, pin, balance)
-  #   @name = name
-  #   @pin = pin
-  #   @balance = balance
-  # end
+  def initialize(name, pin, balance)
+    @name = name
+    @pin = pin
+    @balance = balance
+  end
 
-  # def name
-  #   @name
-  # end
+  def name
+    @name
+  end
+
+  def pin
+    @pin
+  end
 
   def balance
     @balance.to_i
@@ -28,44 +32,42 @@ class User
   end
 end
 
-atm_available_funds = 50000
-
-# Creates a new has from the csv information
+# Creates a new hash from the csv information
 accounts = []
-csv = CSV.foreach('./users.csv', :headers => true, :header_converters => :symbol) { |row|
+csv = CSV.foreach('users.csv', :headers => true, :header_converters => :symbol) { |row|
   row.to_hash
   user = User.new(row[:name], row[:pin], row[:balance])
   accounts.push(user)
 }
 
+ # puts accounts.inspect
+
 # Universal prompt
 def prompt_input(text)
-  input = ""
-  while input == ""
-    puts text
-    print "> "
-    input = gets.chomp
-  end
-  input
+  puts text
+  print ">> "
+  gets.chomp
 end
 
 #Gets user name
 current_user_name = ""
 while current_user_name == ""
-  current_user_name = prompt_user("Please Enter Your Name")
+  current_user_name = prompt_input("Please Enter Your Name")
 end 
 
 #Gets user pin
 current_user_pin = ""
 while current_user_pin == ""
-  current_user_pin = prompt_user("Please Enter Your Pin")
+  current_user_pin = prompt_input("Please Enter Your Pin")
 end
 
 current_user = nil
 
+atm_available_funds = 50000
+
 # Checks the input name and pin against the ones present in accounts
 accounts.each do |user|
-  if user[ :name] == current_user_name && user[ :pin] == current_user_pin
+  if current_user_name == user[ :name] && current_user_pin == user[ :pin]
     current_user = user 
   end
 end
