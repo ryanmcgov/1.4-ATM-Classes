@@ -26,6 +26,7 @@ class User
   end
 end
 
+atm_available_funds = 50000
 accounts = []
 csv = CSV.foreach('./users.csv', :headers => true, :header_converters => :symbol) { |row|
   row.to_hash
@@ -56,7 +57,7 @@ end
 user_exists = false
 current_user = nil
 
-existing_users.each do |user|
+accounts.each do |user|
   if user[ :name] == current_user_name && user[ :pin] == current_user_pin
     current_user = user 
   end
@@ -71,17 +72,17 @@ if current_user
   
   case selected_option
   when 1
-    puts "Your Balance Is #{current_user[:available_funds]}"
+    puts "#{current_user.check_balance}"
   when 2
     requested_amount = prompt_user("How Much Do You Want?")
     if requested_amount >= atm_available_funds
       puts "This machine does not have enough funds"
-    elsif requested_amount >= current_user[:available_funds]
+    elsif requested_amount >= current_user.balance
       puts "Insufficient funds"
     else
       puts "Please Take Your Money"
-      current_user[:available_funds] -= requested_amount
-      puts "New Balance: #{current_user[:available_funds]}"
+      current_user.balance -= requested_amount
+      puts "New Balance: #{current_user.balance}"
     end
     
   when 3
