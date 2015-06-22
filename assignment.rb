@@ -1,20 +1,22 @@
+# Accesses the csv file with user info
 require "csv"
 
+#Creates a User class with appropriate methods
 class User
-  attr_accessor :name, :pin, :balance 
+  attr_accessor :name, :pin
   
-  def initialize(name, pin, balance)
-    @name = name
-    @pin = pin
-    @balance = balance
-  end
+  # def initialize(name, pin, balance)
+  #   @name = name
+  #   @pin = pin
+  #   @balance = balance
+  # end
 
-  def name
-    @name
-  end
+  # def name
+  #   @name
+  # end
 
   def balance
-    @balance.to_1
+    @balance.to_i
   end
 
   def check_balance
@@ -27,6 +29,8 @@ class User
 end
 
 atm_available_funds = 50000
+
+# Creates a new has from the csv information
 accounts = []
 csv = CSV.foreach('./users.csv', :headers => true, :header_converters => :symbol) { |row|
   row.to_hash
@@ -34,6 +38,7 @@ csv = CSV.foreach('./users.csv', :headers => true, :header_converters => :symbol
   accounts.push(user)
 }
 
+# Universal prompt
 def prompt_input(text)
   input = ""
   while input == ""
@@ -44,25 +49,28 @@ def prompt_input(text)
   input
 end
 
+#Gets user name
 current_user_name = ""
 while current_user_name == ""
   current_user_name = prompt_user("Please Enter Your Name")
 end 
 
+#Gets user pin
 current_user_pin = ""
 while current_user_pin == ""
   current_user_pin = prompt_user("Please Enter Your Pin")
 end
 
-user_exists = false
 current_user = nil
 
+# Checks the input name and pin against the ones present in accounts
 accounts.each do |user|
   if user[ :name] == current_user_name && user[ :pin] == current_user_pin
     current_user = user 
   end
 end
 
+# The next set of options if a vaild user is found
 if current_user
   options = ["1. Check Balance", "2. Withdraw Funds", "3. Cancel"]
   selected_option = nil
